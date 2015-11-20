@@ -1,0 +1,4 @@
+CPULoadTester Revision History
+
+Version 1.0.5801; November 19, 2015
+	- Initial release
