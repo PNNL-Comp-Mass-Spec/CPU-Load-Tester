@@ -31,6 +31,7 @@ namespace CPULoadTester
         private static int mThreadCount;
         private static int mRuntimeSeconds;
         private static bool mUseTieredRuntimes;
+        private static bool mLinuxOS;
 
         private static eProcessingMode mProcessingMode;
 
@@ -41,7 +42,13 @@ namespace CPULoadTester
             try
             {
                 mProcessingMode = eProcessingMode.TaskParallelLibrary4_5;
-                mThreadCount = GetCoreCount();
+
+                // Set this to 1 for now
+                // If argument /Threads is present, it will be set to that
+                // Otherwise, it will be set to value returned by GetCorecount()
+                // Hold off calling GetCoreCount() until we have checked for argument /Linux or examined Path.DirectorySeparatorChar
+                mThreadCount = 1;
+
                 mRuntimeSeconds = 15;
                 mUseTieredRuntimes = false;
 
@@ -153,7 +160,7 @@ namespace CPULoadTester
         private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine objParseCommandLine)
         {
             // Returns True if no problems; otherwise, returns false
-            var lstValidParameters = new List<string> { "Mode", "Runtime", "Threads", "UseTiered" };
+            var lstValidParameters = new List<string> { "Mode", "Runtime", "Threads", "UseTiered", "Linux" };
 
             try
             {
@@ -195,8 +202,26 @@ namespace CPULoadTester
                 if (!GetParamInt(objParseCommandLine, "Runtime", ref mRuntimeSeconds))
                     return false;
 
-                if (!GetParamInt(objParseCommandLine, "Threads", ref mThreadCount))
-                    return false;
+                if (objParseCommandLine.IsParameterPresent("Linux"))
+                {
+                    mLinuxOS = true;
+                }
+                else
+                {
+                    if (Path.DirectorySeparatorChar == '/')
+                        mLinuxOS = true;
+                }
+
+
+                if (objParseCommandLine.IsParameterPresent("Threads"))
+                {
+                    if (!GetParamInt(objParseCommandLine, "Threads", ref mThreadCount))
+                        return false;
+                }
+                else
+                {
+                    mThreadCount = GetCoreCount();
+                }
 
                 mUseTieredRuntimes = objParseCommandLine.IsParameterPresent("UseTiered");
 
@@ -280,7 +305,7 @@ namespace CPULoadTester
                 Console.WriteLine("This can be used to simulate varying levels of load on a computer");
                 Console.WriteLine();
                 Console.WriteLine("Program syntax:" + Environment.NewLine + exeName);
-                Console.WriteLine(" [/Mode:{1,2,3,4}] [/RunTime:Seconds] [/Threads:ThreadCount] [/UseTiered]");
+                Console.WriteLine(" [/Mode:{1,2,3,4}] [/RunTime:Seconds] [/Threads:ThreadCount] [/UseTiered] [/Linux]");
                 Console.WriteLine();
                 Console.WriteLine("/Mode:1 is serial calculation (single thread)");
                 Console.WriteLine("/Mode:2 uses a Parallel.For loop");
@@ -294,6 +319,9 @@ namespace CPULoadTester
                 Console.WriteLine("If not specified, all cores will be used; " + GetCoreCount() + " on this computer");
                 Console.WriteLine();
                 Console.WriteLine("Use /UseTiered with modes 2 through 4 to indicate that different threads should run for tiered runtimes (each thread will run for 80% of the length of the previous thread)");
+                Console.WriteLine();
+                Console.WriteLine("Use /Linux to specify that we're running on a Linux OS and thus core count should be determined using /proc/cpuinfo");
+                Console.WriteLine("Linux mode is auto-enabled if the path separator character is a forward slash");
                 Console.WriteLine();
                 Console.WriteLine("Program written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2015");
                 Console.WriteLine("Version: " + GetAppVersion());
