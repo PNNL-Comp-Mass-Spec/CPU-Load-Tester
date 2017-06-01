@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using PRISM;
 
 namespace CPULoadTester
@@ -88,26 +89,42 @@ namespace CPULoadTester
         /// <remarks>Should not be affected by hyperthreading, so a computer with two 4-core chips will report 8 cores</remarks>
         private static int GetCoreCount()
         {
-
-            try
+            if (mLinuxOS)
             {
-                var result = new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor");
-                var coreCount = 0;
+                // Assume running on Linux
+                return GetCoreCountLinux();
+            }
 
-                foreach (var item in result.Get())
-                {
-                    coreCount += int.Parse(item["NumberOfCores"].ToString());
-                }
+            return GetCoreCountWindows();
+        }
 
+        private static int GetCoreCountLinux()
+        {
+            var linuxSystemInfo = new PRISM.clsLinuxSystemInfo(false);
+
+            var coreCount = linuxSystemInfo.GetCoreCount();
+
+            if (coreCount >= 1)
                 return coreCount;
 
-            }
-            catch (Exception)
-            {
-                // This value will be affected by hyperthreading
-                return Environment.ProcessorCount;
-            }
+            var cpuInfoFile = new FileInfo(PRISM.clsLinuxSystemInfo.CPUINFO_FILE_PATH);
+            if (cpuInfoFile.Exists)
+                Console.WriteLine("Core count determined using " + cpuInfoFile.FullName + " is " + coreCount + "; will use 1 thread");
+            else
+                Console.WriteLine("cpuinfo file not found at: " + cpuInfoFile.FullName + "; will use 1 thread");
 
+            return 1;
+
+        }
+
+        private static int GetCoreCountWindows()
+        {
+            var coreCount = PRISMWin.clsProcessStats.GetCoreCount();
+            if (coreCount >= 1)
+                return coreCount;
+
+            Console.WriteLine("Core count reported as " + coreCount + "; will use 1 thread");
+            return 1;
         }
 
         private static void StartProcessing()
