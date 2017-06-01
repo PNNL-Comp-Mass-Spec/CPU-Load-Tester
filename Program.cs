@@ -60,6 +60,14 @@ namespace CPULoadTester
                     if (SetOptionsUsingCommandLineParameters(objParseCommandLine))
                         success = true;
                 }
+                else
+                {
+                    if (objParseCommandLine.NonSwitchParameterCount + objParseCommandLine.ParameterCount == 0 && !objParseCommandLine.NeedToShowHelp)
+                    {
+                        // No arguments were provided; that's OK
+                        success = true;
+                    }
+                }
 
                 if (!success ||
                     objParseCommandLine.NeedToShowHelp)
@@ -258,6 +266,7 @@ namespace CPULoadTester
             string paramValueText;
             if (!objParseCommandLine.RetrieveValueForParameter(paramName, out paramValueText))
             {
+                // Leave paramValue unchanged
                 return true;
             }
 
@@ -267,6 +276,7 @@ namespace CPULoadTester
                 return false;
             }
 
+            // Update paramValue
             if (int.TryParse(paramValueText, out paramValue))
             {
                 return true;
