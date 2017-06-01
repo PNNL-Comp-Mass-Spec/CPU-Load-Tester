@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using FileProcessor;
+using PRISM;
 
 namespace CPULoadTester
 {
@@ -36,7 +36,7 @@ namespace CPULoadTester
 
         static int Main(string[] args)
         {
-            var objParseCommandLine = new FileProcessor.clsParseCommandLine();
+            var objParseCommandLine = new clsParseCommandLine();
 
             try
             {
@@ -146,7 +146,7 @@ namespace CPULoadTester
             return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + " (" + PROGRAM_DATE + ")";
         }
 
-        private static bool SetOptionsUsingCommandLineParameters(FileProcessor.clsParseCommandLine objParseCommandLine)
+        private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine objParseCommandLine)
         {
             // Returns True if no problems; otherwise, returns false
             var lstValidParameters = new List<string> { "Mode", "Runtime", "Threads", "UseTiered" };
