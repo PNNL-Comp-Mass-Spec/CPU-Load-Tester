@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CPULoadTester</RootNamespace>
     <AssemblyName>CPULoadTester</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -35,6 +35,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PRISM">
+      <HintPath>Lib\PRISM.dll</HintPath>
+    </Reference>
+    <Reference Include="PRISMWin">
+      <HintPath>Lib\PRISMWin.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
@@ -46,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clsMonteCarloPiApproximation.cs" />
-    <Compile Include="clsParseCommandLine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
