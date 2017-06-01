@@ -146,6 +146,8 @@ namespace CPULoadTester
             var watch = new Stopwatch();
             watch.Start();
 
+            var pluralS = mThreadCount > 1 ? "s" : string.Empty;
+
             switch (mProcessingMode)
             {
                 case eProcessingMode.Serial:
@@ -154,17 +156,17 @@ namespace CPULoadTester
                     break;
 
                 case eProcessingMode.ParallelFor:
-                    Console.WriteLine("Estimating Pi using {0}, {1} thread", "ParallelFor", mThreadCount);
+                    Console.WriteLine("Estimating Pi using {0}, {1} thread{2}", "ParallelFor", mThreadCount, pluralS);
                     piApproximator.ParallellFor(mRuntimeSeconds, mThreadCount);
                     break;
 
                 case eProcessingMode.TaskParallelLibrary:
-                    Console.WriteLine("Estimating Pi using {0}, {1} threads", "Task Parallel Library (Task Factory)", mThreadCount);
+                    Console.WriteLine("Estimating Pi using {0}, {1} thread{2}", "Task Parallel Library (Task Factory)", mThreadCount, pluralS);
                     piApproximator.TaskParallelLibrary40(mRuntimeSeconds, mThreadCount);
                     break;
 
                 case eProcessingMode.TaskParallelLibrary4_5:
-                    Console.WriteLine("Estimating Pi using {0}, {1} threads", "Task Parallel Library (No Factory)", mThreadCount);
+                    Console.WriteLine("Estimating Pi using {0}, {1} thread{2}", "Task Parallel Library (No Factory)", mThreadCount, pluralS);
                     piApproximator.TaskParallelLibrary45(mRuntimeSeconds, mThreadCount);
                     break;
 
