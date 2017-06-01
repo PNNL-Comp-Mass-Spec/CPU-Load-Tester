@@ -13,12 +13,12 @@ namespace CPULoadTester
     // E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com
     // Website: http://panomics.pnnl.gov/ or http://omics.pnl.gov or http://www.sysbio.org/resources/staff/
     // -------------------------------------------------------------------------------
-    // 
+    //
 
     class Program
     {
 
-        public const string PROGRAM_DATE = "November 19, 2015";
+        public const string PROGRAM_DATE = "June 1, 2017";
 
         private enum eProcessingMode
         {
@@ -40,7 +40,7 @@ namespace CPULoadTester
 
             try
             {
-                mProcessingMode = eProcessingMode.TaskParallelLibrary4_5;                
+                mProcessingMode = eProcessingMode.TaskParallelLibrary4_5;
                 mThreadCount = GetCoreCount();
                 mRuntimeSeconds = 15;
                 mUseTieredRuntimes = false;
@@ -73,7 +73,7 @@ namespace CPULoadTester
             return 0;
 
         }
-        
+
         /// <summary>
         /// Returns the number of cores
         /// </summary>
@@ -82,20 +82,24 @@ namespace CPULoadTester
         private static int GetCoreCount()
         {
 
-	        try {
-		        var result = new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor");
-		        var coreCount = 0;
+            try
+            {
+                var result = new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor");
+                var coreCount = 0;
 
-		        foreach (var item in result.Get()) {
-			        coreCount += int.Parse(item["NumberOfCores"].ToString());
-		        }
+                foreach (var item in result.Get())
+                {
+                    coreCount += int.Parse(item["NumberOfCores"].ToString());
+                }
 
-		        return coreCount;
+                return coreCount;
 
-	        } catch (Exception ex) {
-		        // This value will be affected by hyperthreading
-		        return Environment.ProcessorCount;
-	        }
+            }
+            catch (Exception)
+            {
+                // This value will be affected by hyperthreading
+                return Environment.ProcessorCount;
+            }
 
         }
 
@@ -136,14 +140,14 @@ namespace CPULoadTester
 
             watch.Stop();
 
-            Console.WriteLine("Done, {0} seconds elapsed", (watch.ElapsedMilliseconds / 1000.0).ToString("0.00"));
+            Console.WriteLine("Done, {0:0.00} seconds elapsed", (watch.ElapsedMilliseconds / 1000.0));
             Console.WriteLine();
 
         }
 
         private static string GetAppVersion()
         {
-            return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + " (" + PROGRAM_DATE + ")";
+            return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version + " (" + PROGRAM_DATE + ")";
         }
 
         private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine objParseCommandLine)
@@ -157,7 +161,7 @@ namespace CPULoadTester
                 if (objParseCommandLine.InvalidParametersPresent(lstValidParameters))
                 {
                     var badArguments = new List<string>();
-                    foreach (string item in objParseCommandLine.InvalidParameters(lstValidParameters))
+                    foreach (var item in objParseCommandLine.InvalidParameters(lstValidParameters))
                     {
                         badArguments.Add("/" + item);
                     }
@@ -167,7 +171,7 @@ namespace CPULoadTester
                     return false;
                 }
 
-                // Could query objParseCommandLine to see if various parameters are present						
+                // Could query objParseCommandLine to see if various parameters are present
                 //if (objParseCommandLine.NonSwitchParameterCount > 0)
                 //{
                 //    mFileName = objParseCommandLine.RetrieveNonSwitchParameter(0);
@@ -180,7 +184,7 @@ namespace CPULoadTester
 
                 try
                 {
-                    if (modeValue> 0)
+                    if (modeValue > 0)
                         mProcessingMode = (eProcessingMode)(modeValue - 1);
                 }
                 catch (Exception ex)
@@ -247,14 +251,13 @@ namespace CPULoadTester
         private static void ShowErrorMessage(string strTitle, IEnumerable<string> items)
         {
             const string strSeparator = "------------------------------------------------------------------------------";
-            string strMessage = null;
 
             Console.WriteLine();
             Console.WriteLine(strSeparator);
             Console.WriteLine(strTitle);
-            strMessage = strTitle + ":";
+            var strMessage = strTitle + ":";
 
-            foreach (string item in items)
+            foreach (var item in items)
             {
                 Console.WriteLine("   " + item);
                 strMessage += " " + item;
@@ -288,7 +291,7 @@ namespace CPULoadTester
                 Console.WriteLine("Specify the runtime, in seconds, using /RunTime");
                 Console.WriteLine();
                 Console.WriteLine("Specify the number of threads to use with /Threads");
-                Console.WriteLine("If not specified, all cores will be used; " + GetCoreCount() +" on this computer");
+                Console.WriteLine("If not specified, all cores will be used; " + GetCoreCount() + " on this computer");
                 Console.WriteLine();
                 Console.WriteLine("Use /UseTiered with modes 2 through 4 to indicate that different threads should run for tiered runtimes (each thread will run for 80% of the length of the previous thread)");
                 Console.WriteLine();

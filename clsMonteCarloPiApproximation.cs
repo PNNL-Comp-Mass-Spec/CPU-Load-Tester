@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -57,11 +56,11 @@ namespace CPULoadTester
                     maxRuntimeSeconds = DecrementRuntime(maxRuntimeSeconds);
                 }
 
-                
+
             });
 
             ComputeAndReportPi("ParallelFor", inCircle, totalIterations, maxRuntimeSeconds);
-        
+
         }
 
         public void TaskParallelLibrary40(int maxRuntimeSeconds)
@@ -86,7 +85,7 @@ namespace CPULoadTester
             var runTimesByIndex = GetRunTimesByThread(numberOfCores, maxRuntimeSeconds);
 
             foreach (var item in runTimesByIndex)
-            {           
+            {
                 // Must cache the values to avoid error "Access to modified closure"
                 var procIndex = item.Key;
                 var threadRuntime = item.Value;
@@ -147,12 +146,12 @@ namespace CPULoadTester
 
             Task.WaitAll(workerTasks.ToArray());
 
-            var inCircle = workers.Sum(worker => (long)worker.HitsInCircle);
-            var totalIterations = workers.Sum(worker => (long)worker.TotalIterations);
+            var inCircle = workers.Sum(worker => worker.HitsInCircle);
+            var totalIterations = workers.Sum(worker => worker.TotalIterations);
 
             ComputeAndReportPi("TPL 4.5", inCircle, totalIterations, maxRuntimeSeconds);
         }
-       
+
         /// <summary>
         /// Estimate Pi using a single thread
         /// </summary>
@@ -176,10 +175,8 @@ namespace CPULoadTester
             var piApproximation = 4 * (inCircle / (double)totalIterations);
 
             Console.WriteLine();
-            Console.WriteLine("{0} approximated Pi = {1} using {2} iterations over {3} seconds",
-                taskDescription,
-                piApproximation.ToString("F8"), 
-                totalIterations.ToString("#,##0"), 
+            Console.WriteLine("{0} approximated Pi = {1:F8} using {2:#,##0} iterations over {3} seconds",
+                taskDescription, piApproximation, totalIterations,
                 maxRuntimeSeconds);
 
         }
@@ -223,10 +220,7 @@ namespace CPULoadTester
             private long mTotalIterations;
             private readonly int mThreadNumber;
 
-            public long HitsInCircle
-            {
-                get { return mHitsInCircle; }
-            }
+            public long HitsInCircle => mHitsInCircle;
 
             public double PiEstimate
             {
@@ -239,10 +233,7 @@ namespace CPULoadTester
                 }
             }
 
-            public long TotalIterations
-            {
-                get { return mTotalIterations; }
-            }
+            public long TotalIterations => mTotalIterations;
 
             /// <summary>
             /// Construtor
@@ -283,10 +274,9 @@ namespace CPULoadTester
                     }
                 }
 
-                Console.WriteLine("  Thread {0} complete at {1}, {2} seconds elapsed", 
-                    mThreadNumber, 
-                    GetFormattedTime(), 
-                    dtEndTime.Subtract(dtStartTime).TotalSeconds.ToString("0.0"));
+                Console.WriteLine("  Thread {0} complete at {1}, {2:0.0} seconds elapsed",
+                    mThreadNumber,
+                    GetFormattedTime(), dtEndTime.Subtract(dtStartTime).TotalSeconds);
             }
 
             private DateTime GetEndTime(int maxRuntimeSeconds)
