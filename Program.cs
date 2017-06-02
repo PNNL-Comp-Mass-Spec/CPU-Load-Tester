@@ -108,14 +108,14 @@ namespace CPULoadTester
 
         private static int GetCoreCountLinux()
         {
-            var linuxSystemInfo = new PRISM.clsLinuxSystemInfo(false);
+            var linuxSystemInfo = new clsLinuxSystemInfo(false);
 
             var coreCount = linuxSystemInfo.GetCoreCount();
 
             if (coreCount >= 1)
                 return coreCount;
 
-            var cpuInfoFile = new FileInfo(PRISM.clsLinuxSystemInfo.CPUINFO_FILE_PATH);
+            var cpuInfoFile = new FileInfo(clsPathUtils.CombineLinuxPaths(clsLinuxSystemInfo.ROOT_PROC_DIRECTORY, clsLinuxSystemInfo.CPUINFO_FILE));
             if (cpuInfoFile.Exists)
                 Console.WriteLine("Core count determined using " + cpuInfoFile.FullName + " is " + coreCount + "; will use 1 thread");
             else
@@ -325,7 +325,7 @@ namespace CPULoadTester
 
         private static void ShowProgramHelp()
         {
-            var exeName = System.IO.Path.GetFileName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            var exeName = Path.GetFileName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
             try
             {
@@ -375,7 +375,7 @@ namespace CPULoadTester
         {
             try
             {
-                using (var swErrorStream = new System.IO.StreamWriter(Console.OpenStandardError()))
+                using (var swErrorStream = new StreamWriter(Console.OpenStandardError()))
                 {
                     swErrorStream.WriteLine(strErrorMessage);
                 }
