@@ -21,8 +21,8 @@ tiered runtimes (each thread will run for 80% of the length of the previous thre
 -------------------------------------------------------------------------------
 Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2015
 
-E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com
-Website: http://panomics.pnnl.gov/ or http://omics.pnl.gov or http://www.sysbio.org/resources/staff/
+E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
+Website: https://panomics.pnnl.gov/ or https://omics.pnl.gov
 -------------------------------------------------------------------------------
 
 Licensed under the Apache License, Version 2.0; you may not use this file except 

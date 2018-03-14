@@ -11,15 +11,15 @@ namespace CPULoadTester
     // -------------------------------------------------------------------------------
     // Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA)
     //
-    // E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com
-    // Website: http://panomics.pnnl.gov/ or http://omics.pnl.gov or http://www.sysbio.org/resources/staff/
+    // E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
+    // Website: https://panomics.pnnl.gov/ or https://omics.pnl.gov
     // -------------------------------------------------------------------------------
     //
 
     class Program
     {
 
-        public const string PROGRAM_DATE = "June 1, 2017";
+        public const string PROGRAM_DATE = "March 14, 2018";
 
         private enum eProcessingMode
         {
@@ -227,9 +227,7 @@ namespace CPULoadTester
 
         private static bool GetParamInt(clsParseCommandLine objParseCommandLine, string paramName, ref int paramValue)
         {
-
-            string paramValueText;
-            if (!objParseCommandLine.RetrieveValueForParameter(paramName, out paramValueText))
+            if (!objParseCommandLine.RetrieveValueForParameter(paramName, out var paramValueText))
             {
                 // Leave paramValue unchanged
                 return true;
@@ -295,8 +293,8 @@ namespace CPULoadTester
                 Console.WriteLine("Version: " + GetAppVersion());
                 Console.WriteLine();
 
-                Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com");
-                Console.WriteLine("Website: http://panomics.pnnl.gov/ or http://omics.pnl.gov or http://www.sysbio.org/resources/staff/");
+                Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov");
+                Console.WriteLine("Website: https://panomics.pnnl.gov/ or https://omics.pnl.gov");
                 Console.WriteLine();
 
                 // Delay for 750 msec in case the user double clicked this file from within Windows Explorer (or started the program via a shortcut)
