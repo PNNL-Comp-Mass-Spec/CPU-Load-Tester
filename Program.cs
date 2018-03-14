@@ -268,8 +268,9 @@ namespace CPULoadTester
             try
             {
                 Console.WriteLine();
-                Console.WriteLine("This program estimates the value of Pi, using either a single thread or multiple threads");
-                Console.WriteLine("This can be used to simulate varying levels of load on a computer");
+                Console.WriteLine(WrapParagraph(
+                                      "This program estimates the value of Pi, using either a single thread or multiple threads. " +
+                                      "This can be used to simulate varying levels of load on a computer"));
                 Console.WriteLine();
                 Console.WriteLine("Program syntax:" + Environment.NewLine + exeName);
                 Console.WriteLine(" [/Mode:{1,2,3,4}] [/RunTime:Seconds] [/Threads:ThreadCount] [/UseTiered] [/Preview]");
@@ -285,7 +286,9 @@ namespace CPULoadTester
                 Console.WriteLine("Specify the number of threads to use with /Threads");
                 Console.WriteLine("If not specified, all cores will be used; " + GetCoreCount() + " on this computer");
                 Console.WriteLine();
-                Console.WriteLine("Use /UseTiered with modes 2 through 4 to indicate that different threads should run for tiered runtimes (each thread will run for 80% of the length of the previous thread)");
+                Console.WriteLine(WrapParagraph(
+                                      "Use /UseTiered with modes 2 through 4 to indicate that different threads should run for tiered runtimes " +
+                                      "(each thread will run for a shorter time than the previous thread)"));
                 Console.WriteLine();
                 Console.WriteLine("Use /Preview to preview the threads that would be started");
                 Console.WriteLine();
@@ -308,6 +311,9 @@ namespace CPULoadTester
 
         }
 
-
+        private static string WrapParagraph(string textToWrap)
+        {
+            return PRISM.CommandLineParser<clsMonteCarloPiApproximation>.WrapParagraph(textToWrap);
+        }
     }
 }
