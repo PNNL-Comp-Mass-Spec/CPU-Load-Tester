@@ -32,7 +32,6 @@ namespace CPULoadTester
         private static int mThreadCount;
         private static int mRuntimeSeconds;
         private static bool mUseTieredRuntimes;
-        private static bool mLinuxOS;
 
         private static eProcessingMode mProcessingMode;
 
@@ -47,9 +46,7 @@ namespace CPULoadTester
                 // Set this to 1 for now
                 // If argument /Threads is present, it will be set to that
                 // Otherwise, it will be set to value returned by GetCorecount()
-                // Hold off calling GetCoreCount() until we have checked for argument /Linux or examined Path.DirectorySeparatorChar
                 mThreadCount = 1;
-
                 mRuntimeSeconds = 15;
                 mUseTieredRuntimes = false;
 
@@ -97,42 +94,8 @@ namespace CPULoadTester
         /// <remarks>Should not be affected by hyperthreading, so a computer with two 4-core chips will report 8 cores</remarks>
         private static int GetCoreCount()
         {
-            if (mLinuxOS)
-            {
-                // Assume running on Linux
-                return GetCoreCountLinux();
-            }
-
-            return GetCoreCountWindows();
-        }
-
-        private static int GetCoreCountLinux()
-        {
-            var linuxSystemInfo = new clsLinuxSystemInfo(false);
-
-            var coreCount = linuxSystemInfo.GetCoreCount();
-
-            if (coreCount >= 1)
-                return coreCount;
-
-            var cpuInfoFile = new FileInfo(clsPathUtils.CombineLinuxPaths(clsLinuxSystemInfo.ROOT_PROC_DIRECTORY, clsLinuxSystemInfo.CPUINFO_FILE));
-            if (cpuInfoFile.Exists)
-                Console.WriteLine("Core count determined using " + cpuInfoFile.FullName + " is " + coreCount + "; will use 1 thread");
-            else
-                Console.WriteLine("cpuinfo file not found at: " + cpuInfoFile.FullName + "; will use 1 thread");
-
-            return 1;
-
-        }
-
-        private static int GetCoreCountWindows()
-        {
-            var coreCount = PRISMWin.clsProcessStats.GetCoreCount();
-            if (coreCount >= 1)
-                return coreCount;
-
-            Console.WriteLine("Core count reported as " + coreCount + "; will use 1 thread");
-            return 1;
+            var coreCount = PRISM.SystemInfo.GetCoreCount();
+            return coreCount;
         }
 
         private static void StartProcessing()
@@ -228,17 +191,6 @@ namespace CPULoadTester
 
                 if (!GetParamInt(objParseCommandLine, "Runtime", ref mRuntimeSeconds))
                     return false;
-
-                if (objParseCommandLine.IsParameterPresent("Linux"))
-                {
-                    mLinuxOS = true;
-                }
-                else
-                {
-                    if (Path.DirectorySeparatorChar == '/')
-                        mLinuxOS = true;
-                }
-
 
                 if (objParseCommandLine.IsParameterPresent("Threads"))
                 {
@@ -349,8 +301,7 @@ namespace CPULoadTester
                 Console.WriteLine();
                 Console.WriteLine("Use /UseTiered with modes 2 through 4 to indicate that different threads should run for tiered runtimes (each thread will run for 80% of the length of the previous thread)");
                 Console.WriteLine();
-                Console.WriteLine("Use /Linux to specify that we're running on a Linux OS and thus core count should be determined using /proc/cpuinfo");
-                Console.WriteLine("Linux mode is auto-enabled if the path separator character is a forward slash");
+                Console.WriteLine("Use /Preview to preview the threads that would be started");
                 Console.WriteLine();
                 Console.WriteLine("Program written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2015");
                 Console.WriteLine("Version: " + GetAppVersion());
