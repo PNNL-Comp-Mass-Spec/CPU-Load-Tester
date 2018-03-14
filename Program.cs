@@ -32,6 +32,7 @@ namespace CPULoadTester
         private static int mThreadCount;
         private static int mRuntimeSeconds;
         private static bool mUseTieredRuntimes;
+        private static bool mPreviewMode;
 
         private static eProcessingMode mProcessingMode;
 
@@ -102,13 +103,20 @@ namespace CPULoadTester
 
             var piApproximator = new clsMonteCarloPiApproximation
             {
-                UseTieredRuntimes = mUseTieredRuntimes
+                UseTieredRuntimes = mUseTieredRuntimes,
+                PreviewMode = mPreviewMode
             };
 
             var watch = new Stopwatch();
             watch.Start();
 
             var pluralS = mThreadCount > 1 ? "s" : string.Empty;
+
+            if (mPreviewMode)
+            {
+                Console.WriteLine("Preview of thread{0} that would be used to compute Pi", pluralS);
+                Console.WriteLine();
+            }
 
             switch (mProcessingMode)
             {
@@ -136,7 +144,9 @@ namespace CPULoadTester
 
             watch.Stop();
 
-            Console.WriteLine("Done, {0:0.00} seconds elapsed", (watch.ElapsedMilliseconds / 1000.0));
+            if (!mPreviewMode)
+                Console.WriteLine("Done, {0:0.00} seconds elapsed", watch.ElapsedMilliseconds / 1000.0);
+
             Console.WriteLine();
 
         }
@@ -149,7 +159,7 @@ namespace CPULoadTester
         private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine objParseCommandLine)
         {
             // Returns True if no problems; otherwise, returns false
-            var lstValidParameters = new List<string> { "Mode", "Runtime", "Threads", "UseTiered", "Linux" };
+            var lstValidParameters = new List<string> { "Mode", "Runtime", "Threads", "UseTiered", "Preview" };
 
             try
             {
@@ -202,6 +212,8 @@ namespace CPULoadTester
                 }
 
                 mUseTieredRuntimes = objParseCommandLine.IsParameterPresent("UseTiered");
+
+                mPreviewMode = objParseCommandLine.IsParameterPresent("Preview");
 
                 return true;
             }
@@ -262,7 +274,7 @@ namespace CPULoadTester
                 Console.WriteLine("This can be used to simulate varying levels of load on a computer");
                 Console.WriteLine();
                 Console.WriteLine("Program syntax:" + Environment.NewLine + exeName);
-                Console.WriteLine(" [/Mode:{1,2,3,4}] [/RunTime:Seconds] [/Threads:ThreadCount] [/UseTiered] [/Linux]");
+                Console.WriteLine(" [/Mode:{1,2,3,4}] [/RunTime:Seconds] [/Threads:ThreadCount] [/UseTiered] [/Preview]");
                 Console.WriteLine();
                 Console.WriteLine("/Mode:1 is serial calculation (single thread)");
                 Console.WriteLine("/Mode:2 uses a Parallel.For loop");

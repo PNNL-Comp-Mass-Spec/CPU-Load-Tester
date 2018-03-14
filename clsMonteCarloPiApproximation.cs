@@ -11,7 +11,11 @@ namespace CPULoadTester
         private const int ENDTIME_CHECK_MODULUS = 100000;
 
         #region "Properties"
+
+        public bool PreviewMode { get; set; }
+
         public bool UseTieredRuntimes { get; set; }
+
         #endregion
 
         /// <summary>
@@ -45,7 +49,7 @@ namespace CPULoadTester
             {
                 Interlocked.Add(ref threadNumber, 1);
 
-                var worker = new PiEstimateWorker(threadNumber);
+                var worker = new PiEstimateWorker(threadNumber, PreviewMode);
                 worker.DoWork(maxRuntimeSeconds);
 
                 Interlocked.Add(ref inCircle, worker.HitsInCircle);
@@ -92,7 +96,7 @@ namespace CPULoadTester
 
                 tasks[procIndex] = Task.Factory.StartNew(() =>
                 {
-                    var worker = new PiEstimateWorker(procIndex + 1);
+                    var worker = new PiEstimateWorker(procIndex + 1, PreviewMode);
                     worker.DoWork(threadRuntime);
 
                     inCircleDetails[procIndex] = worker.HitsInCircle;
@@ -136,7 +140,7 @@ namespace CPULoadTester
                 var procIndex = item.Key;
                 var threadRuntime = item.Value;
 
-                var worker = new PiEstimateWorker(procIndex + 1);
+                var worker = new PiEstimateWorker(procIndex + 1, PreviewMode);
                 workers.Add(worker);
 
                 var workerTask = new Task(() => worker.DoWork(threadRuntime));
@@ -158,7 +162,7 @@ namespace CPULoadTester
         /// <param name="maxRuntimeSeconds"></param>
         public void SerialCalculation(int maxRuntimeSeconds)
         {
-            var worker = new PiEstimateWorker(1);
+            var worker = new PiEstimateWorker(1, PreviewMode);
             worker.DoWork(maxRuntimeSeconds);
 
             ComputeAndReportPi("SerialCalculation", worker.HitsInCircle, worker.TotalIterations, maxRuntimeSeconds);
@@ -171,6 +175,9 @@ namespace CPULoadTester
 
         private void ComputeAndReportPi(string taskDescription, long inCircle, long totalIterations, int maxRuntimeSeconds)
         {
+
+            if (PreviewMode)
+                return;
 
             var piApproximation = 4 * (inCircle / (double)totalIterations);
 
@@ -217,6 +224,7 @@ namespace CPULoadTester
         {
 
             private long mHitsInCircle;
+            private bool mPreviewMode;
             private long mTotalIterations;
             private readonly int mThreadNumber;
 
@@ -238,11 +246,12 @@ namespace CPULoadTester
             /// <summary>
             /// Construtor
             /// </summary>
-            public PiEstimateWorker(int threadNumber)
+            public PiEstimateWorker(int threadNumber, bool preview = false)
             {
                 mHitsInCircle = 0;
                 mTotalIterations = 0;
                 mThreadNumber = threadNumber;
+                mPreviewMode = preview;
             }
 
             public void DoWork(int maxRuntimeSeconds)
@@ -257,6 +266,9 @@ namespace CPULoadTester
                 var dtStartTime = DateTime.UtcNow;
 
                 Console.WriteLine("  Thread {0} starting at {1} with runtime {2} seconds", mThreadNumber, GetFormattedTime(), maxRuntimeSeconds);
+
+                if (mPreviewMode)
+                    return;
 
                 var doWork = true;
 
