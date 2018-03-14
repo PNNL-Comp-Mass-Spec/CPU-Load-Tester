@@ -1,4 +1,13 @@
 CPULoadTester Revision History
 
+Version 1.0.6647; March 14, 2018
+	- Use the latest PRISM.dll and PRISMWin.dll from NuGet
+	- Add /Preview switch
+	- Use PRISM.SystemInfo.GetCoreCount(), which properly detects the OS
+
+Verison 1.0.6361; June 1, 2017
+	- Add support for determining core count on Linux systems
+	- Use clsParseCommandLine in PRISM.dll
+
 Version 1.0.5801; November 19, 2015
 	- Initial release
