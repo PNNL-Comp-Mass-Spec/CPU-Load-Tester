@@ -195,7 +195,7 @@ namespace CPULoadTester
                 }
                 catch (Exception ex)
                 {
-                    ShowErrorMessage("Invalid value for /Mode; should be /Mode:1 or /Mode:2 or /Mode:3 or /Mode:4" + Environment.NewLine + ex.Message);
+                    ShowErrorMessage("Invalid value for /Mode; should be /Mode:1 or /Mode:2 or /Mode:3 or /Mode:4", ex);
                 }
 
                 if (!GetParamInt(objParseCommandLine, "Runtime", ref mRuntimeSeconds))
