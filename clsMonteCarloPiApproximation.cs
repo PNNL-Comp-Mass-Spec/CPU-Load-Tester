@@ -57,7 +57,7 @@ namespace CPULoadTester
 
                 if (UseTieredRuntimes)
                 {
-                    maxRuntimeSeconds = DecrementRuntime(maxRuntimeSeconds);
+                    maxRuntimeSeconds = DecrementRuntime(maxRuntimeSeconds, numberOfCores);
                 }
 
 
@@ -188,9 +188,10 @@ namespace CPULoadTester
 
         }
 
-        private int DecrementRuntime(int maxRuntimeSeconds)
+        private int DecrementRuntime(int maxRuntimeSeconds, int numberOfCores)
         {
-            var newRuntimeSeconds = maxRuntimeSeconds * 0.8;
+            var factor = 1 - 1.0 / numberOfCores;
+            var newRuntimeSeconds = maxRuntimeSeconds * factor;
 
             var runtimeFloor = (int)Math.Floor(newRuntimeSeconds);
             if (runtimeFloor < 1)
@@ -208,7 +209,7 @@ namespace CPULoadTester
                 runTimesByIndex.Add(i, maxRuntimeSeconds);
                 if (UseTieredRuntimes)
                 {
-                    maxRuntimeSeconds = DecrementRuntime(maxRuntimeSeconds);
+                    maxRuntimeSeconds = DecrementRuntime(maxRuntimeSeconds, numberOfCores);
                 }
             }
 
