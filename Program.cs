@@ -38,7 +38,7 @@ namespace CPULoadTester
 
         static int Main(string[] args)
         {
-            var objParseCommandLine = new clsParseCommandLine();
+            var commandLineParser = new clsParseCommandLine();
 
             try
             {
@@ -53,26 +53,24 @@ namespace CPULoadTester
 
                 var success = false;
 
-                if (objParseCommandLine.ParseCommandLine())
+                if (commandLineParser.ParseCommandLine())
                 {
-                    if (SetOptionsUsingCommandLineParameters(objParseCommandLine))
+                    if (SetOptionsUsingCommandLineParameters(commandLineParser))
                         success = true;
                 }
                 else
                 {
-                    if (objParseCommandLine.NonSwitchParameterCount + objParseCommandLine.ParameterCount == 0 && !objParseCommandLine.NeedToShowHelp)
+                    if (commandLineParser.NonSwitchParameterCount + commandLineParser.ParameterCount == 0 && !commandLineParser.NeedToShowHelp)
                     {
                         // No arguments were provided; that's OK
                         success = true;
                     }
                 }
 
-                if (!success ||
-                    objParseCommandLine.NeedToShowHelp)
+                if (!success || commandLineParser.NeedToShowHelp)
                 {
                     ShowProgramHelp();
                     return -1;
-
                 }
 
                 StartProcessing();
@@ -156,7 +154,7 @@ namespace CPULoadTester
             return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version + " (" + PROGRAM_DATE + ")";
         }
 
-        private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine objParseCommandLine)
+        private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine commandLineParser)
         {
             // Returns True if no problems; otherwise, returns false
             var lstValidParameters = new List<string> { "Mode", "Runtime", "Threads", "UseTiered", "Preview" };
@@ -164,10 +162,10 @@ namespace CPULoadTester
             try
             {
                 // Make sure no invalid parameters are present
-                if (objParseCommandLine.InvalidParametersPresent(lstValidParameters))
+                if (commandLineParser.InvalidParametersPresent(lstValidParameters))
                 {
                     var badArguments = new List<string>();
-                    foreach (var item in objParseCommandLine.InvalidParameters(lstValidParameters))
+                    foreach (var item in commandLineParser.InvalidParameters(lstValidParameters))
                     {
                         badArguments.Add("/" + item);
                     }
@@ -177,15 +175,15 @@ namespace CPULoadTester
                     return false;
                 }
 
-                // Could query objParseCommandLine to see if various parameters are present
-                //if (objParseCommandLine.NonSwitchParameterCount > 0)
+                // Could query commandLineParser to see if various parameters are present
+                //if (commandLineParser.NonSwitchParameterCount > 0)
                 //{
-                //    mFileName = objParseCommandLine.RetrieveNonSwitchParameter(0);
+                //    mFileName = commandLineParser.RetrieveNonSwitchParameter(0);
                 //}
 
 
                 var modeValue = 0;
-                if (!GetParamInt(objParseCommandLine, "Mode", ref modeValue))
+                if (!GetParamInt(commandLineParser, "Mode", ref modeValue))
                     return false;
 
                 try
@@ -198,12 +196,12 @@ namespace CPULoadTester
                     ShowErrorMessage("Invalid value for /Mode; should be /Mode:1 or /Mode:2 or /Mode:3 or /Mode:4", ex);
                 }
 
-                if (!GetParamInt(objParseCommandLine, "Runtime", ref mRuntimeSeconds))
+                if (!GetParamInt(commandLineParser, "Runtime", ref mRuntimeSeconds))
                     return false;
 
-                if (objParseCommandLine.IsParameterPresent("Threads"))
+                if (commandLineParser.IsParameterPresent("Threads"))
                 {
-                    if (!GetParamInt(objParseCommandLine, "Threads", ref mThreadCount))
+                    if (!GetParamInt(commandLineParser, "Threads", ref mThreadCount))
                         return false;
                 }
                 else
@@ -211,9 +209,9 @@ namespace CPULoadTester
                     mThreadCount = GetCoreCount();
                 }
 
-                mUseTieredRuntimes = objParseCommandLine.IsParameterPresent("UseTiered");
+                mUseTieredRuntimes = commandLineParser.IsParameterPresent("UseTiered");
 
-                mPreviewMode = objParseCommandLine.IsParameterPresent("Preview");
+                mPreviewMode = commandLineParser.IsParameterPresent("Preview");
 
                 return true;
             }
@@ -225,9 +223,9 @@ namespace CPULoadTester
             return false;
         }
 
-        private static bool GetParamInt(clsParseCommandLine objParseCommandLine, string paramName, ref int paramValue)
+        private static bool GetParamInt(clsParseCommandLine commandLineParser, string paramName, ref int paramValue)
         {
-            if (!objParseCommandLine.RetrieveValueForParameter(paramName, out var paramValueText))
+            if (!commandLineParser.RetrieveValueForParameter(paramName, out var paramValueText))
             {
                 // Leave paramValue unchanged
                 return true;
