@@ -233,7 +233,7 @@ namespace CPULoadTester
 
             if (string.IsNullOrWhiteSpace(paramValueText))
             {
-                ShowErrorMessage("/" + paramName + " does not have a value; should define the number of threads to use");
+                ShowErrorMessage("/" + paramName + " does not have a value");
                 return false;
             }
 
@@ -247,7 +247,6 @@ namespace CPULoadTester
             return false;
         }
 
-
         private static void ShowErrorMessage(string message, Exception ex = null)
         {
             ConsoleMsgUtils.ShowError(message, ex);
@@ -257,7 +256,6 @@ namespace CPULoadTester
         {
             ConsoleMsgUtils.ShowErrors(title, items);
         }
-
 
         private static void ShowProgramHelp()
         {
