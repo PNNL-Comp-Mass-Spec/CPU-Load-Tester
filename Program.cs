@@ -19,7 +19,7 @@ namespace CPULoadTester
     class Program
     {
 
-        public const string PROGRAM_DATE = "March 14, 2018";
+        public const string PROGRAM_DATE = "March 15, 2018";
 
         private enum eProcessingMode
         {
@@ -268,7 +268,7 @@ namespace CPULoadTester
             try
             {
                 Console.WriteLine();
-                Console.WriteLine(WrapParagraph(
+                Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
                                       "This program estimates the value of Pi, using either a single thread or multiple threads. " +
                                       "This can be used to simulate varying levels of load on a computer"));
                 Console.WriteLine();
@@ -286,7 +286,7 @@ namespace CPULoadTester
                 Console.WriteLine("Specify the number of threads to use with /Threads");
                 Console.WriteLine("If not specified, all cores will be used; " + GetCoreCount() + " on this computer");
                 Console.WriteLine();
-                Console.WriteLine(WrapParagraph(
+                Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
                                       "Use /UseTiered with modes 2 through 4 to indicate that different threads should run for tiered runtimes " +
                                       "(each thread will run for a shorter time than the previous thread)"));
                 Console.WriteLine();
@@ -300,8 +300,8 @@ namespace CPULoadTester
                 Console.WriteLine("Website: https://panomics.pnnl.gov/ or https://omics.pnl.gov");
                 Console.WriteLine();
 
-                // Delay for 750 msec in case the user double clicked this file from within Windows Explorer (or started the program via a shortcut)
-                System.Threading.Thread.Sleep(750);
+                // Delay for 1 second in case the user double clicked this file from within Windows Explorer (or started the program via a shortcut)
+                ConsoleMsgUtils.SleepSeconds(1);
 
             }
             catch (Exception ex)
@@ -311,9 +311,5 @@ namespace CPULoadTester
 
         }
 
-        private static string WrapParagraph(string textToWrap)
-        {
-            return PRISM.CommandLineParser<clsMonteCarloPiApproximation>.WrapParagraph(textToWrap);
-        }
     }
 }
