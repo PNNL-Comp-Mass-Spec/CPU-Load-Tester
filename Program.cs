@@ -12,14 +12,14 @@ namespace CPULoadTester
     // Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA)
     //
     // E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-    // Website: https://panomics.pnnl.gov/ or https://omics.pnl.gov
+    // Website: https://omics.pnl.gov or https://panomics.pnnl.gov/
     // -------------------------------------------------------------------------------
     //
 
     class Program
     {
 
-        public const string PROGRAM_DATE = "March 15, 2018";
+        public const string PROGRAM_DATE = "September 21, 2018";
 
         private enum eProcessingMode
         {
@@ -36,7 +36,7 @@ namespace CPULoadTester
 
         private static eProcessingMode mProcessingMode;
 
-        static int Main(string[] args)
+        static int Main()
         {
             var commandLineParser = new clsParseCommandLine();
 
@@ -46,7 +46,7 @@ namespace CPULoadTester
 
                 // Set this to 1 for now
                 // If argument /Threads is present, it will be set to that
-                // Otherwise, it will be set to value returned by GetCorecount()
+                // Otherwise, it will be set to value returned by GetCoreCount()
                 mThreadCount = 1;
                 mRuntimeSeconds = 15;
                 mUseTieredRuntimes = false;
@@ -92,7 +92,7 @@ namespace CPULoadTester
         /// <remarks>Should not be affected by hyperthreading, so a computer with two 4-core chips will report 8 cores</remarks>
         private static int GetCoreCount()
         {
-            var coreCount = PRISM.SystemInfo.GetCoreCount();
+            var coreCount = SystemInfo.GetCoreCount();
             return coreCount;
         }
 
@@ -170,7 +170,7 @@ namespace CPULoadTester
                         badArguments.Add("/" + item);
                     }
 
-                    ShowErrorMessage("Invalid commmand line parameters", badArguments);
+                    ShowErrorMessage("Invalid command line parameters", badArguments);
 
                     return false;
                 }
@@ -293,7 +293,7 @@ namespace CPULoadTester
                 Console.WriteLine();
 
                 Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov");
-                Console.WriteLine("Website: https://panomics.pnnl.gov/ or https://omics.pnl.gov");
+                Console.WriteLine("Website: https://omics.pnl.gov or https://panomics.pnnl.gov/");
                 Console.WriteLine();
 
                 // Delay for 1 second in case the user double clicked this file from within Windows Explorer (or started the program via a shortcut)
