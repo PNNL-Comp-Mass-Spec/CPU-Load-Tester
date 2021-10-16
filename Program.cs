@@ -12,7 +12,7 @@ namespace CPULoadTester
     // Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA)
     //
     // E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-    // Website: https://omics.pnl.gov or https://panomics.pnnl.gov/
+    // Website: https://github.com/PNNL-Comp-Mass-Spec/ or https://panomics.pnnl.gov/ or https://www.pnnl.gov/integrative-omics
     // -------------------------------------------------------------------------------
     //
 
@@ -293,7 +293,7 @@ namespace CPULoadTester
                 Console.WriteLine();
 
                 Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov");
-                Console.WriteLine("Website: https://omics.pnl.gov or https://panomics.pnnl.gov/");
+                Console.WriteLine("Website: https://github.com/PNNL-Comp-Mass-Spec/ or https://panomics.pnnl.gov/ or https://www.pnnl.gov/integrative-omics");
                 Console.WriteLine();
 
                 // Delay for 1 second in case the user double clicked this file from within Windows Explorer (or started the program via a shortcut)
